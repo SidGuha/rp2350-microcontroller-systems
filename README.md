@@ -26,25 +26,8 @@ Everything here is written against the reference manual rather than a vendor abs
 
 Each directory has its own README describing the objective, the peripherals configured, and how to build and flash it.
 
-## Repository layout
-
-```
-01-gpio/
-  src/          firmware source
-  inc/          headers
-  <startup>     startup + linker script
-  Makefile      build configuration
-  README.md     notes for this project
-02-interrupts/
-...
-```
-
 ## Building
 
-Each project builds independently from its own directory:
-
 ```
-cd 01-gpio
 <build command>
-<flash command>
 ```
