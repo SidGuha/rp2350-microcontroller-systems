@@ -6,11 +6,6 @@
 #include "queue.h"
 #include "support.h"
 
-//////////////////////////////////////////////////////////////////////////////
-
-const char* username = "guha11";
-
-//////////////////////////////////////////////////////////////////////////////
 
 static int duty_cycle = 0;
 static int dir = 0;
@@ -27,7 +22,6 @@ void set_freq(int chan, float f);
 extern KeyEvents kev;
 void drum_machine();
 
-//////////////////////////////////////////////////////////////////////////////
 
 // When testing static duty-cycle PWM
 #define STEP2
@@ -40,13 +34,7 @@ void drum_machine();
 
 
 //pwm_get_counter();
-
-//////////////////////////////////////////////////////////////////////////////
-
 void init_pwm_static(uint32_t period, uint32_t duty_cycle) {
-    // fill in
-    //found on page 286 of pico sdk
-
     //step 1: Configure pins 37, 38, 39 as PWM outputs.
     gpio_set_function(37, GPIO_FUNC_PWM);
     gpio_set_function(38, GPIO_FUNC_PWM);
@@ -71,7 +59,6 @@ void init_pwm_static(uint32_t period, uint32_t duty_cycle) {
 
     //step 3: Set the wrapping counter value of the pin's 
     //corresponding PWM slice to the value passed in period minus 1
-    //again page 286
     pwm_set_wrap(slice_num1, period - 1);
     pwm_set_wrap(slice_num2, period - 1);
 
@@ -91,19 +78,10 @@ void init_pwm_static(uint32_t period, uint32_t duty_cycle) {
     pwm_set_enabled(slice_num2, true);
 
     //redundant
-    pwm_set_enabled(slice_num3, true);
-
-
-    //q1: TOP
-    //q2: CC
-    //q3: CSR
-    //q4: 
-    //q5: 
+    pwm_set_enabled(slice_num3, true); 
 }
 
 void pwm_breathing() {
-    // fill in
-
     //step1: acknowledge the interrupt
     uint slice_num = pwm_gpio_to_slice_num(37);
     pwm_hw->intr = (1 << slice_num);
@@ -139,14 +117,10 @@ void pwm_breathing() {
     //step5: set the chosen color's duty cycle to the ratio of the 
     //current duty_cycle to the current period of the PWM signal 
     //(multiply by period value, divide by 100)
-    pwm_set_gpio_level(37 + color, duty_cycle * current_period / 100);    
-    //pwm_set_gpio_level(38, duty_cycle * current_period / 100);    
-    //pwm_set_gpio_level(39, duty_cycle * current_period / 100);    
+    pwm_set_gpio_level(37 + color, duty_cycle * current_period / 100);        
 }
 
 void init_pwm_irq() {
-    // fill in
-
     //step1: Within the PWM peripheral registers, enable interrupts for 
     //the PWM slice associated with GP37, associated with the first PWM wrap interrupt
     uint slice_num = pwm_gpio_to_slice_num(37);
@@ -161,8 +135,6 @@ void init_pwm_irq() {
 
     //step4: Obtain the current period for PWM the PWM slice associated with 
     //GP37 via the appropriate register, and store it in a new variable called current_period.
-    //example on page 55
-    //top + 1 cuz starts from 0
     current_period = pwm_hw->slice[slice_num].top + 1;
 
     //step5: Set the global variable duty_cycle to 100 and dir to 1
@@ -177,8 +149,6 @@ void init_pwm_irq() {
 }
 
 void pwm_audio_handler() {
-    // fill in
-
     //step1: Acknowledge the corresponding interrupt.
     uint slice_num = pwm_gpio_to_slice_num(36);
     pwm_hw->intr = (1 << slice_num);
@@ -249,7 +219,6 @@ void init_pwm_audio() {
 
 }
 
-//////////////////////////////////////////////////////////////////////////////
 
 int main()
 {
@@ -257,9 +226,7 @@ int main()
     // communicate over UART through the TX/RX pins
     stdio_init_all();
 
-    // Uncomment when you need to run autotest.
-    // Keep this commented out until you need it
-    // since it adds a lot of time to the upload process.
+    
     // autotest();
 
     // Make sure to copy in the latest display.c and keypad.c from your previous labs.
@@ -267,13 +234,6 @@ int main()
     keypad_init_timer();
     display_init_pins();
     display_init_timer();
-
-    /*
-    *******************************************************
-    * Make sure to go through the code in the steps below.  
-    * A lot of it can be very useful for your projects.
-    *******************************************************
-    */
 
     #ifdef STEP2
     init_pwm_static(100, 50); // Start out with 500/1000, 50%
